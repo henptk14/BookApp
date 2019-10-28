@@ -2,8 +2,12 @@ package com.hcl.bookapp.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 public class Book {
@@ -43,12 +47,38 @@ public class Book {
     }
 
     private Date updatedAt;
+    
+    @PreUpdate
+    protected void update() {
+    	updatedAt = new Date();
+    }
 
-    @NotBlank(message = "Status cannot be blank")
+    @NotNull
     @Column(nullable = false)
-    private int status;
+    private Integer status;
 
-    public long getId() {
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "book")
+    private List<Comment> comments = new ArrayList<Comment>();
+    
+    
+    
+    public List<Comment> getComments() {
+		return comments;
+	}
+
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+	
+	public long getId() {
         return id;
     }
 
@@ -110,14 +140,6 @@ public class Book {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
     }
 
     @Override

@@ -32,6 +32,10 @@ public class Comment {
     @NotBlank(message = "Status cannot be blank")
     @Column(nullable = false)
     private int status;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bookId")
+    private Book book;
 
     public long getId() {
         return id;
